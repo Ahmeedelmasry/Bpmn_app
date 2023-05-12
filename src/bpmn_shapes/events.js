@@ -18,7 +18,66 @@ function getEventShapes() {
       width: 60,
       height: 60,
       ports: ports,
+    },
+    {
+      id: "Start Event With Message",
+      shape: {
+        type: "Bpmn",
+        shape: "Event",
+        event: {
+          event: "Start",
+          trigger: "Message",
+        },
+      },
+      width: 60,
       constraints: NodeConstraints.Default | NodeConstraints.ReadOnly,
+      height: 60,
+      ports: ports,
+    },
+    {
+      id: "Start Event With Error",
+      shape: {
+        type: "Bpmn",
+        shape: "Event",
+        event: {
+          event: "Start",
+          trigger: "Error",
+        },
+      },
+      width: 60,
+      height: 60,
+      constraints: NodeConstraints.Default | NodeConstraints.ReadOnly,
+      ports: ports,
+    },
+    {
+      id: "Start Event With Escalation",
+      shape: {
+        type: "Bpmn",
+        shape: "Event",
+        event: {
+          event: "Start",
+          trigger: "Escalation",
+        },
+      },
+      width: 60,
+      height: 60,
+      constraints: NodeConstraints.Default | NodeConstraints.ReadOnly,
+      ports: ports,
+    },
+    {
+      id: "Start Event With Timer",
+      shape: {
+        type: "Bpmn",
+        shape: "Event",
+        event: {
+          event: "Start",
+          trigger: "Timer",
+        },
+      },
+      width: 60,
+      height: 60,
+      constraints: NodeConstraints.Default | NodeConstraints.ReadOnly,
+      ports: ports,
     },
     {
       id: "Intermediate Event",
@@ -32,11 +91,10 @@ function getEventShapes() {
       },
       width: 60,
       height: 60,
-      constraints: NodeConstraints.Default | NodeConstraints.ReadOnly,
       ports: ports,
     },
     {
-      id: "Start Event With Msg",
+      id: "Intermediate Event With Message",
       shape: {
         type: "Bpmn",
         shape: "Event",
@@ -51,7 +109,7 @@ function getEventShapes() {
       ports: ports,
     },
     {
-      id: "Start Event With Timer",
+      id: "Intermediate Event With Timer",
       shape: {
         type: "Bpmn",
         shape: "Event",
@@ -66,7 +124,7 @@ function getEventShapes() {
       ports: ports,
     },
     {
-      id: "Start Event With Escalation",
+      id: "Intermediate Event With Escalation",
       shape: {
         type: "Bpmn",
         shape: "Event",
@@ -81,58 +139,13 @@ function getEventShapes() {
       ports: ports,
     },
     {
-      id: "Start Event With Conditional",
+      id: "Intermediate Event With Error",
       shape: {
         type: "Bpmn",
         shape: "Event",
         event: {
           event: "Intermediate",
-          trigger: "Conditional",
-        },
-      },
-      width: 60,
-      constraints: NodeConstraints.Default | NodeConstraints.ReadOnly,
-      height: 60,
-      ports: ports,
-    },
-    {
-      id: "Start Event With Link",
-      shape: {
-        type: "Bpmn",
-        shape: "Event",
-        event: {
-          event: "Intermediate",
-          trigger: "Link",
-        },
-      },
-      width: 60,
-      height: 60,
-      constraints: NodeConstraints.Default | NodeConstraints.ReadOnly,
-      ports: ports,
-    },
-    {
-      id: "Start Event With Compensation",
-      shape: {
-        type: "Bpmn",
-        shape: "Event",
-        event: {
-          event: "Intermediate",
-          trigger: "Compensation",
-        },
-      },
-      width: 60,
-      constraints: NodeConstraints.Default | NodeConstraints.ReadOnly,
-      height: 60,
-      ports: ports,
-    },
-    {
-      id: "Start Event With Intermediate",
-      shape: {
-        type: "Bpmn",
-        shape: "Event",
-        event: {
-          event: "Intermediate",
-          trigger: "Signal",
+          trigger: "Error",
         },
       },
       width: 60,
@@ -153,11 +166,10 @@ function getEventShapes() {
       },
       width: 60,
       height: 60,
-      constraints: NodeConstraints.Default | NodeConstraints.ReadOnly,
       ports: ports,
     },
     {
-      id: "End Event With Msg",
+      id: "End Event With Message",
       shape: {
         type: "Bpmn",
         shape: "Event",
@@ -200,142 +212,6 @@ function getEventShapes() {
       height: 60,
       constraints: NodeConstraints.Default | NodeConstraints.ReadOnly,
       ports: ports,
-    },
-    {
-      id: "End Event With Cancel",
-      shape: {
-        type: "Bpmn",
-        shape: "Event",
-        event: {
-          event: "End",
-          trigger: "Cancel",
-        },
-      },
-      width: 60,
-      constraints: NodeConstraints.Default | NodeConstraints.ReadOnly,
-      height: 60,
-      ports: ports,
-    },
-    {
-      id: "End Event With Compensation",
-      shape: {
-        type: "Bpmn",
-        shape: "Event",
-        event: {
-          event: "End",
-          trigger: "Compensation",
-        },
-      },
-      width: 60,
-      height: 60,
-      constraints: NodeConstraints.Default | NodeConstraints.ReadOnly,
-      ports: ports,
-    },
-    {
-      id: "End Event With Signal",
-      shape: {
-        type: "Bpmn",
-        shape: "Event",
-        event: {
-          event: "End",
-          trigger: "Signal",
-        },
-      },
-      width: 60,
-      height: 60,
-      constraints: NodeConstraints.Default | NodeConstraints.ReadOnly,
-      ports: ports,
-    },
-    {
-      id: "End Event With Terminate",
-      shape: {
-        type: "Bpmn",
-        shape: "Event",
-        event: {
-          event: "End",
-          trigger: "Terminate",
-        },
-      },
-      width: 60,
-      height: 60,
-      constraints: NodeConstraints.Default | NodeConstraints.ReadOnly,
-      ports: ports,
-    },
-    // Dotted Shapes
-    {
-      id: "Non-Interrupting Intermediate With Message",
-      shape: {
-        type: "Bpmn",
-        shape: "Event",
-        event: {
-          event: "NonInterruptingIntermediate",
-          trigger: "Message",
-        },
-      },
-      width: 60,
-      height: 60,
-      constraints: NodeConstraints.Default | NodeConstraints.ReadOnly,
-      ports: ports,
-    },
-    {
-      id: "Non-Interrupting Intermediate With Timer",
-      shape: {
-        type: "Bpmn",
-        shape: "Event",
-        event: {
-          event: "NonInterruptingIntermediate",
-          trigger: "Timer",
-        },
-      },
-      width: 60,
-      height: 60,
-      constraints: NodeConstraints.Default | NodeConstraints.ReadOnly,
-      ports: ports,
-    },
-    {
-      id: "Non-Interrupting Intermediate With Escalation",
-      shape: {
-        type: "Bpmn",
-        shape: "Event",
-        event: {
-          event: "NonInterruptingIntermediate",
-          trigger: "Escalation",
-        },
-      },
-      width: 60,
-      constraints: NodeConstraints.Default | NodeConstraints.ReadOnly,
-      ports: ports,
-      height: 60,
-    },
-    {
-      id: "Non-Interrupting Intermediate With Conditional",
-      shape: {
-        type: "Bpmn",
-        shape: "Event",
-        event: {
-          event: "NonInterruptingIntermediate",
-          trigger: "Conditional",
-        },
-      },
-      width: 60,
-      constraints: NodeConstraints.Default | NodeConstraints.ReadOnly,
-      ports: ports,
-      height: 60,
-    },
-    {
-      id: "Non-Interrupting Intermediate With Signal",
-      shape: {
-        type: "Bpmn",
-        shape: "Event",
-        event: {
-          event: "NonInterruptingIntermediate",
-          trigger: "Signal",
-        },
-      },
-      width: 60,
-      constraints: NodeConstraints.Default | NodeConstraints.ReadOnly,
-      ports: ports,
-      height: 60,
     },
   ];
 

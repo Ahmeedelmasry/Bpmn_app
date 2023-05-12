@@ -16,7 +16,8 @@
           :symbolHeight="symbolHeight"
           :symbolWidth="symbolWidth"
           :getNodeDefaults="palettegetNodeDefaults"
-        ></ejs-symbolpalette>
+        >
+        </ejs-symbolpalette>
       </div>
 
       <div
@@ -35,16 +36,372 @@
           style="display: block"
           ref="diagramObject"
           id="diagram"
+          class="position-relative"
           :mode="mode"
           width="100%"
           :height="height"
           :nodes="nodes"
           :connectors="connectors"
           :dragEnter="dragEnter"
+          :selectionChange="selectionChange"
           :rulerSettings="rulerSettings"
-        ></ejs-diagram>
+          :constraints="constraints"
+          :enableConnectorSplit="enableConnectorSplit"
+          :commandManager="commandManager"
+        >
+          <!-- Alerts Div -->
+          <div
+            class="alerts"
+            style="
+              position: absolute;
+              top: 0;
+              z-index: 1000;
+              width: 100%;
+              background: white;
+              box-shadow: 0px 0px 9px -5px black;
+            "
+          >
+            <div class="alert-parent" v-for="(err, i) in validateErrs" :key="i">
+              <v-alert
+                v-if="err.msg"
+                dense
+                outlined
+                type="error"
+                border="left"
+                dark
+                dismissible
+                v-model="err.showErr"
+              >
+                <strong>{{ err.msg }}</strong>
+              </v-alert>
+            </div>
+          </div>
+          <!-- Alerts Div -->
+          <!-- Show Selected Data -->
+          <div
+            class="show_selected_data text-center"
+            :style="`${
+              selectedObject.item.shape ? 'display: block' : 'display: none'
+            }`"
+          >
+            <v-container>
+              <h5
+                style="
+                  margin: auto;
+                  width: fit-content;
+                  text-decoration: underline;
+                  margin-bottom: 10px;
+                "
+              >
+                Item Properties
+              </h5>
+              <v-row
+                style="
+                  font-size: 16px;
+                  font-weight: 500;
+                  justify-content: center;
+                "
+              >
+                <v-col cols="2"></v-col>
+                <v-col cols="4">
+                  <v-card
+                    class="text-start"
+                    style="box-shadow: unset !important"
+                  >
+                    <!-- Events -->
+                    <div
+                      class="div"
+                      v-if="
+                        selectedObject.item.shape &&
+                        selectedObject.item.shape.shape == 'Event'
+                      "
+                    >
+                      <p>Item Type: {{ selectedObject.item.shape.shape }}</p>
+                      <p>
+                        Item Name: {{ selectedObject.item.shape.event.event }}
+                        {{ selectedObject.item.shape.shape }}
+                        {{
+                          selectedObject.item.shape.event.trigger !== "None"
+                            ? "With " + selectedObject.item.shape.event.trigger
+                            : ""
+                        }}
+                      </p>
+                    </div>
+                    <!-- Gateways -->
+                    <div
+                      class="div"
+                      v-else-if="
+                        selectedObject.item.shape &&
+                        selectedObject.item.shape.shape == 'Gateway'
+                      "
+                    >
+                      <p>Item Type: {{ selectedObject.item.shape.shape }}</p>
+                      <p>
+                        Item Name: {{ selectedObject.item.shape.gateway.type }}
+                        {{ selectedObject.item.shape.shape }}
+                      </p>
+                    </div>
+                    <!-- Tasks -->
+                    <div
+                      class="div"
+                      v-else-if="
+                        selectedObject.item.shape &&
+                        selectedObject.item.shape.shape == 'Activity'
+                      "
+                    >
+                      <p>Item Type: Activity</p>
+                      <p>
+                        Item Name: Activity
+                        {{
+                          selectedObject.item.shape.activity.task.type !==
+                          "None"
+                            ? "With " +
+                              selectedObject.item.shape.activity.task.type
+                            : ""
+                        }}
+                      </p>
+                    </div>
+                    <!-- Data -->
+                    <div
+                      class="div"
+                      v-else-if="
+                        selectedObject.item.shape &&
+                        (selectedObject.item.shape.shape == 'DataObject' ||
+                          selectedObject.item.shape.shape == 'DataSource')
+                      "
+                    >
+                      <p>Item Type: Data</p>
+                      <p>Item Name: {{ selectedObject.item.shape.shape }}</p>
+                    </div>
+                    <!-- If No Selected item -->
+                    <div v-else>
+                      <p>No Selected Item</p>
+                    </div>
+                    <!-- End Of Selected Item -->
+                  </v-card>
+                </v-col>
+                <v-col cols="3" class="text-start">
+                  <v-card
+                    class="pb-5 pl-7"
+                    style="box-shadow: unset !important"
+                  >
+                    <v-row style="color: #716f6f !important">
+                      <!-- Predecessors -->
+                      <v-col cols="12 pa-0 pt-3">
+                        Predecessors:
+                        <v-menu v-if="selectedObject.pre.length" top>
+                          <template v-slot:activator="{ attrs, on }">
+                            <v-icon
+                              class="white--text ma-0"
+                              v-bind="attrs"
+                              v-on="on"
+                              color="blue"
+                            >
+                              mdi-chevron-down
+                            </v-icon>
+                          </template>
+
+                          <v-list>
+                            <v-list-item
+                              link
+                              v-for="(predecessor, i) in selectedObject.pre"
+                              :key="predecessor.id"
+                            >
+                              <v-list-item-title>
+                                <!-- Events -->
+                                <div
+                                  class="div"
+                                  v-if="
+                                    predecessor.shape &&
+                                    predecessor.shape.shape == 'Event'
+                                  "
+                                >
+                                  <p>
+                                    {{ i + 1 }}- Item Name:
+                                    {{ predecessor.shape.event.event }}
+                                    {{ predecessor.shape.shape }}
+                                    {{
+                                      predecessor.shape.event.trigger !== "None"
+                                        ? "With " +
+                                          predecessor.shape.event.trigger
+                                        : ""
+                                    }}
+                                  </p>
+                                </div>
+                                <!-- Gateways -->
+                                <div
+                                  class="div"
+                                  v-if="
+                                    predecessor.shape &&
+                                    predecessor.shape.shape == 'Gateway'
+                                  "
+                                >
+                                  <p>
+                                    {{ i + 1 }}- Item Name:
+                                    {{ predecessor.shape.gateway.type }}
+                                    {{ predecessor.shape.shape }}
+                                  </p>
+                                </div>
+                                <!-- Tasks -->
+                                <div
+                                  class="div"
+                                  v-if="
+                                    predecessor.shape &&
+                                    predecessor.shape.shape == 'Activity'
+                                  "
+                                >
+                                  <p>
+                                    {{ i + 1 }}- Item Name: Activity
+                                    {{
+                                      predecessor.shape.activity.task.type !==
+                                      "None"
+                                        ? "With " +
+                                          predecessor.shape.activity.task.type
+                                        : ""
+                                    }}
+                                  </p>
+                                </div>
+                                <!-- Data -->
+                                <div
+                                  class="div"
+                                  v-if="
+                                    predecessor.shape &&
+                                    (predecessor.shape.shape == 'DataObject' ||
+                                      predecessor.shape.shape == 'DataSource')
+                                  "
+                                >
+                                  <p>
+                                    {{ i + 1 }}- Item Name:
+                                    {{ predecessor.shape.shape }}
+                                  </p>
+                                </div>
+                              </v-list-item-title>
+                            </v-list-item>
+                          </v-list>
+                        </v-menu>
+                        <span v-else>
+                          <span>No Predecessors</span>
+                        </span>
+                      </v-col>
+                      <!-- Successors -->
+                      <v-col cols="12" class="pa-0 mb-3">
+                        Successors:
+                        <v-menu v-if="selectedObject.after.length" top>
+                          <template v-slot:activator="{ attrs, on }">
+                            <v-icon
+                              class="white--text ma-0"
+                              v-bind="attrs"
+                              v-on="on"
+                              color="blue"
+                            >
+                              mdi-chevron-down
+                            </v-icon>
+                          </template>
+
+                          <v-list>
+                            <v-list-item
+                              link
+                              v-for="(successor, i) in selectedObject.after"
+                              :key="successor.id"
+                            >
+                              <v-list-item-title>
+                                <!-- Events -->
+                                <div
+                                  class="div"
+                                  v-if="
+                                    successor.shape &&
+                                    successor.shape.shape == 'Event'
+                                  "
+                                >
+                                  <p>
+                                    {{ i + 1 }}- Item Name:
+                                    {{ successor.shape.event.event }}
+                                    {{ successor.shape.shape }}
+                                    {{
+                                      successor.shape.event.trigger !== "None"
+                                        ? "With " +
+                                          successor.shape.event.trigger
+                                        : ""
+                                    }}
+                                  </p>
+                                </div>
+                                <!-- Gateways -->
+                                <div
+                                  class="div"
+                                  v-if="
+                                    successor.shape &&
+                                    successor.shape.shape == 'Gateway'
+                                  "
+                                >
+                                  <p>
+                                    {{ i + 1 }}- Item Name:
+                                    {{ successor.shape.gateway.type }}
+                                    {{ successor.shape.shape }}
+                                  </p>
+                                </div>
+                                <!-- Tasks -->
+                                <div
+                                  class="div"
+                                  v-if="
+                                    successor.shape &&
+                                    successor.shape.shape == 'Activity'
+                                  "
+                                >
+                                  <p>
+                                    {{ i + 1 }}- Item Name: Activity
+                                    {{
+                                      successor.shape.activity.task.type !==
+                                      "None"
+                                        ? "With " +
+                                          successor.shape.activity.task.type
+                                        : ""
+                                    }}
+                                  </p>
+                                </div>
+                                <!-- Data -->
+                                <div
+                                  class="div"
+                                  v-if="
+                                    successor.shape &&
+                                    (successor.shape.shape == 'DataObject' ||
+                                      successor.shape.shape == 'DataSource')
+                                  "
+                                >
+                                  <p>
+                                    {{ i + 1 }}- Item Name:
+                                    {{ successor.shape.shape }}
+                                  </p>
+                                </div>
+                              </v-list-item-title>
+                            </v-list-item>
+                          </v-list>
+                        </v-menu>
+                        <span v-else>
+                          <span>No Successors</span>
+                        </span>
+                      </v-col>
+                    </v-row>
+                  </v-card>
+                </v-col>
+                <v-col cols="2"></v-col>
+              </v-row>
+            </v-container>
+          </div>
+        </ejs-diagram>
       </div>
     </div>
+    <!-- Success Popup -->
+    <SuccessPopup
+      :showSuccessPopup="showSuccessPopup"
+      @closePopupEmit="showSuccessPopup = false"
+      @doDownload="downloadDiagram"
+      @doUpload="uploadDiagram"
+    />
+    <!-- Success Popup -->
+
+    <!-- Upload Popup -->
+    <UploadPopup v-if="showUploadPopup" @closeSavedPopup="closeUploadPopup" />
+    <!-- Upload Popup -->
 
     <!-- All Btns Parent -->
     <div
@@ -59,6 +416,7 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        z-index: 1;
       "
     >
       <!-- Keyboard Parent -->
@@ -73,9 +431,17 @@
           padding: 10px 0;
         "
       >
-        <v-icon @click="openKeyboard = !openKeyboard"
-          >mdi-keyboard-outline</v-icon
-        >
+        <v-tooltip left>
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon
+              @click="openKeyboard = !openKeyboard"
+              v-bind="attrs"
+              v-on="on"
+              >mdi-keyboard-outline</v-icon
+            >
+          </template>
+          <span>Keyboard Shortcuts</span>
+        </v-tooltip>
       </div>
 
       <!-- Bottom Btns Parent -->
@@ -93,12 +459,62 @@
           padding: 10px 0;
         "
       >
-        <v-icon @click="zoomIn">mdi-magnify-plus-outline</v-icon>
-        <v-icon @click="zoomOut">mdi-magnify-minus-outline</v-icon>
-        <v-icon @click="undoAction">mdi-undo</v-icon>
-        <v-icon @click="redoAction">mdi-redo</v-icon>
-        <v-icon @click="recenterDiagram">mdi-aspect-ratio</v-icon>
-        <v-icon @click="deleteAll">mdi-delete-outline</v-icon>
+        <v-tooltip left>
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon @click="zoomIn" v-bind="attrs" v-on="on"
+              >mdi-magnify-plus-outline
+            </v-icon>
+          </template>
+          <span>Zoom In</span>
+        </v-tooltip>
+        <v-tooltip left>
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon @click="zoomOut" v-bind="attrs" v-on="on"
+              >mdi-magnify-minus-outline
+            </v-icon>
+          </template>
+          <span>Zoom Out</span>
+        </v-tooltip>
+        <v-tooltip left>
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon @click="undoAction" v-bind="attrs" v-on="on"
+              >mdi-undo</v-icon
+            >
+          </template>
+          <span>Undo</span>
+        </v-tooltip>
+        <v-tooltip left>
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon @click="redoAction" v-bind="attrs" v-on="on"
+              >mdi-redo</v-icon
+            >
+          </template>
+          <span>Redo</span>
+        </v-tooltip>
+        <v-tooltip left>
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon @click="recenterDiagram" v-bind="attrs" v-on="on"
+              >mdi-aspect-ratio</v-icon
+            >
+          </template>
+          <span>Recenter</span>
+        </v-tooltip>
+        <v-tooltip left>
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon @click="deleteAll" v-bind="attrs" v-on="on"
+              >mdi-delete-outline</v-icon
+            >
+          </template>
+          <span>Clear</span>
+        </v-tooltip>
+        <v-tooltip left>
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon @click="validate" v-bind="attrs" v-on="on"
+              >mdi-check</v-icon
+            >
+          </template>
+          <span>Completed</span>
+        </v-tooltip>
       </div>
     </div>
     <!-- Keyboard Shortcuts Popup -->
@@ -123,12 +539,26 @@ import {
   DataBinding,
   ConnectorEditing,
   Diagram,
+  ConnectorBridging,
+  DiagramConstraints,
+  Keys,
+  PrintAndExport,
 } from "@syncfusion/ej2-vue-diagrams";
 
 // Get Paletts Shapes
 import getPaletts from "@/bpmn_shapes/paletts";
-// Drag Enter Function
-import dragEnter from "@/bpmn_shapes/dragEnter";
+
+//Get Selection Function
+import selectItem from "@/bpmn_shapes/shapeSelecttions/shapeSelect";
+
+// Get Validation Function
+import validateDiagram from "@/bpmn_shapes/validation/validationMain";
+
+// Get Success Validation Popup
+import SuccessPopup from "@/components/SuccessPopup.vue";
+
+// Get Success Upload Popup
+import UploadPopup from "@/components/UploadDiagram.vue";
 
 // Diagram Variabls
 let diagram;
@@ -137,11 +567,13 @@ let connectors = [];
 
 // Intialize Diagram Plugin
 Diagram.Inject(ConnectorEditing);
+Diagram.Inject(ConnectorBridging);
+Diagram.Inject(PrintAndExport);
 Vue.use(DiagramPlugin);
 Vue.use(SymbolPalettePlugin);
 
 export default Vue.extend({
-  components: { KeyboardShortcuts },
+  components: { KeyboardShortcuts, SuccessPopup, UploadPopup },
   data: function () {
     return {
       openKeyboard: false,
@@ -149,10 +581,131 @@ export default Vue.extend({
       mode: "SVG",
       nodes: nodes,
       connectors: connectors,
+      enableConnectorSplit: true,
+      constraints: DiagramConstraints.Default | DiagramConstraints.Bridging,
+      selectedObject: {
+        item: "",
+        pre: "",
+        after: "",
+      },
+      isValid: false,
+      validateErrs: {},
       rulerSettings: {
         showRulers: true,
       },
-      dragEnter: dragEnter,
+      showSuccessPopup: false,
+      showUploadPopup: false,
+      selectionChange: (args) => {
+        this.selectedObject = {
+          item: "",
+          pre: "",
+          after: "",
+        };
+        let selectedObj = {};
+        let isSelectedItem = selectItem(args, diagram, selectedObj);
+        if (isSelectedItem) {
+          this.selectedObject = isSelectedItem;
+        }
+      },
+      dragEnter: (args) => {
+        let obj = args.element;
+        if (obj instanceof Node) {
+          if (
+            obj &&
+            obj.shape &&
+            obj.shape.activity &&
+            obj.shape.activity.subProcess
+          ) {
+            let activity = obj.shape.activity;
+            if (
+              activity &&
+              activity.subProcess &&
+              !activity.subProcess.collapsed
+            ) {
+              if (activity.subProcess.transaction) {
+                if (activity.subProcess.transaction.cancel) {
+                  activity.subProcess.transaction.cancel.visible = true;
+                }
+                if (activity.subProcess.transaction.failure) {
+                  activity.subProcess.transaction.failure.visible = true;
+                }
+                if (activity.subProcess.transaction.success) {
+                  activity.subProcess.transaction.success.visible = true;
+                }
+              }
+            } else {
+              if (obj) {
+                let oWidth = obj.width || 0;
+                let oHeight = obj.height || 0;
+
+                obj.width = 100;
+                obj.offsetX = obj.offsetX || 0;
+                obj.offsetY = obj.offsetY || 0;
+                obj.height = obj.height || 0;
+                obj.height *= 100 / obj.width || 1;
+                obj.offsetX += (obj.width - oWidth) / 2;
+                obj.offsetY += (obj.height - oHeight) / 2;
+              }
+            }
+          }
+        }
+      },
+      commandManager: {
+        commands: [
+          {
+            name: "nudgeUp",
+            canExecute: function () {
+              if (diagram.selectedItems.nodes[0].shape.type == "SwimLane") {
+                return false;
+              } else {
+                return true;
+              }
+            },
+            gesture: {
+              key: Keys.Up,
+            },
+          },
+          {
+            name: "nudgeDown",
+            canExecute: function () {
+              if (diagram.selectedItems.nodes[0].shape.type == "SwimLane") {
+                return false;
+              } else {
+                return true;
+              }
+            },
+            gesture: {
+              key: Keys.Down,
+            },
+          },
+          {
+            name: "nudgeRight",
+            canExecute: function () {
+              if (diagram.selectedItems.nodes[0].shape.type == "SwimLane") {
+                return false;
+              } else {
+                return true;
+              }
+            },
+            gesture: {
+              key: Keys.Right,
+            },
+          },
+          {
+            name: "nudgeLeft",
+            canExecute: function () {
+              if (diagram.selectedItems.nodes[0].shape.type == "SwimLane") {
+                return false;
+              } else {
+                return true;
+              }
+            },
+            gesture: {
+              key: Keys.Left,
+            },
+          },
+        ],
+      },
       expandMode: "Multiple",
       palettes: getPaletts(),
       palettewidth: "550",
@@ -168,10 +721,13 @@ export default Vue.extend({
       },
     };
   },
-  provide: {
-    diagram: [BpmnDiagrams, UndoRedo, DataBinding],
-    SymbolPalette: [BpmnDiagrams, DataBinding],
+  provide() {
+    return {
+      diagram: [BpmnDiagrams, UndoRedo, DataBinding],
+      SymbolPalette: [BpmnDiagrams, DataBinding],
+    };
   },
+
   mounted: function () {
     this.height = window.innerHeight - 20;
     this.paletteheight = window.innerHeight - 20 + "px";
@@ -180,18 +736,17 @@ export default Vue.extend({
   },
   methods: {
     undoAction() {
-      let diagramInstance;
+      let diagram;
       let diagramObj = document.getElementById("diagram");
-      diagramInstance = diagramObj.ej2_instances[0];
-      diagramInstance.undo();
+      diagram = diagramObj.ej2_instances[0];
+      diagram.undo();
     },
     redoAction() {
-      let diagramInstance;
+      let diagram;
       let diagramObj = document.getElementById("diagram");
-      // console.log(diagramObj.ej2_instances);
-      diagramInstance = diagramObj.ej2_instances[0];
+      diagram = diagramObj.ej2_instances[0];
       // Reverts the last action performed
-      diagramInstance.redo();
+      diagram.redo();
     },
     zoomIn() {
       //zoomIn option is used to zoom in the diagram
@@ -209,6 +764,39 @@ export default Vue.extend({
     },
     deleteAll() {
       diagram.clear();
+    },
+    validate() {
+      const savedDiagram = diagram.saveDiagram();
+      const validResult = validateDiagram(JSON.parse(savedDiagram));
+      this.validateErrs = validResult;
+      let isSound = false;
+      for (let val of Object.entries(this.validateErrs)) {
+        if (val[1].msg) {
+          isSound = false;
+          break;
+        } else {
+          isSound = true;
+        }
+      }
+      if (isSound) {
+        this.showUploadPopup = false;
+        this.showSuccessPopup = true;
+      }
+    },
+    downloadDiagram() {
+      let options = {};
+      options.mode = "Download";
+      diagram.exportDiagram(options);
+      this.showSuccessPopup = false;
+    },
+    uploadDiagram() {
+      this.showSuccessPopup = false;
+      setTimeout(() => {
+        this.showUploadPopup = true;
+      }, 500);
+    },
+    closeUploadPopup() {
+      this.showUploadPopup = false;
     },
   },
 });
@@ -629,6 +1217,48 @@ export default Vue.extend({
 }
 .v-overlay {
   position: absolute;
+}
+.e-symbolpalette .e-symbol-hover:hover {
+  border: 1px solid rgb(0, 115, 255);
+  background: transparent;
+}
+.e-symbolpalette .e-symbol-selected {
+  border: 1px solid rgb(0, 115, 255);
+  background: transparent;
+}
+
+#uCMObbf8N5_header_groupElement text {
+  display: none !important;
+  color: transparent !important;
+}
+
+/* Show Selected Data */
+.show_selected_data {
+  width: calc(100% - 31px);
+  position: absolute;
+  background: white;
+  bottom: 5px;
+  transition: 0.2s all ease-in-out;
+  z-index: 1;
+  left: 26px;
+  right: 5px;
+  box-shadow: 0px 0px 5px -2px #000000b0;
+}
+.show_selected_data p {
+  font-weight: 500;
+  margin-bottom: 5px;
+  font-size: 16px !important;
+  color: #716f6f;
+}
+.show_selected_data h5 {
+  color: #716f6f;
+  font-size: 22px;
+}
+.show_selected_data .container {
+  height: 100%;
+}
+.v-card {
+  padding: 10px;
 }
 
 /* Media Queries */

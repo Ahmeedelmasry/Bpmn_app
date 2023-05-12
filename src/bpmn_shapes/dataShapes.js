@@ -1,4 +1,3 @@
-import { NodeConstraints } from "@syncfusion/ej2-vue-diagrams";
 import getPorts from "@/bpmn_shapes/ports";
 
 function getDataShapes() {
@@ -12,12 +11,11 @@ function getDataShapes() {
         shape: "DataObject",
       },
       width: 60,
-      constraints: NodeConstraints.Default | NodeConstraints.ReadOnly,
       ports: ports,
       height: 60,
     },
     {
-      id: "DataSource",
+      id: "Data Source",
       shape: {
         type: "Bpmn",
         shape: "DataSource",
@@ -27,7 +25,6 @@ function getDataShapes() {
         },
       },
       width: 60,
-      constraints: NodeConstraints.Default | NodeConstraints.ReadOnly,
       ports: ports,
       height: 60,
     },

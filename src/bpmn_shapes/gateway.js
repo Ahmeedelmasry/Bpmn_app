@@ -5,20 +5,6 @@ function getGatewayShapes() {
   let ports = getPorts();
   let gatewayShapes = [
     {
-      id: "Gateway",
-      shape: {
-        type: "Bpmn",
-        shape: "Gateway",
-        gateway: {
-          type: "None",
-        },
-      },
-      width: 60,
-      ports: ports,
-      constraints: NodeConstraints.Default | NodeConstraints.ReadOnly,
-      height: 60,
-    },
-    {
       id: "Exclusive Gateway",
       shape: {
         type: "Bpmn",
@@ -47,7 +33,7 @@ function getGatewayShapes() {
       height: 60,
     },
     {
-      id: "ParallelEventBased Gateway",
+      id: "Parallel Event Based Gateway",
       shape: {
         type: "Bpmn",
         shape: "Gateway",

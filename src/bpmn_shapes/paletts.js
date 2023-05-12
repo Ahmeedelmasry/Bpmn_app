@@ -40,7 +40,7 @@ function getPaletts() {
   return [
     {
       id: "event",
-      expanded: true,
+      expanded: false,
       symbols: eventShapes,
       iconCss: "shapes",
       title: "Events",
@@ -50,14 +50,14 @@ function getPaletts() {
       expanded: false,
       symbols: gatewayShapes,
       iconCss: "shapes",
-      title: "Gateway",
+      title: "Gateways",
     },
     {
       id: "activities",
       expanded: false,
       symbols: taskShapes,
       iconCss: "shapes",
-      title: "Tasks",
+      title: "Activities",
     },
     {
       id: "documents",
