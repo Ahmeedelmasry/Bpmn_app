@@ -396,18 +396,10 @@
       :showSuccessPopup="showSuccessPopup"
       @closePopupEmit="showSuccessPopup = false"
       @doDownload="downloadDiagram"
-      @doUpload="uploadDiagram"
-      popupType="upload"
+      @doUpdate="uploadDiagram"
+      popupType="update"
     />
     <!-- Success Popup -->
-
-    <!-- Upload Popup -->
-    <UploadPopup
-      v-if="showUploadPopup"
-      @closeSavedPopup="closeUploadPopup"
-      :theDiagram="theDiagram"
-    />
-    <!-- Upload Popup -->
 
     <!-- All Btns Parent -->
     <div
@@ -571,8 +563,7 @@ import validateDiagram from "@/bpmn_shapes/validation/validationMain";
 // Get Success Validation Popup
 import SuccessPopup from "@/components/SuccessPopup.vue";
 
-// Get Success Upload Popup
-import UploadPopup from "@/components/UploadDiagram.vue";
+import { mapActions, mapState } from "vuex";
 
 // Diagram Variabls
 let diagram;
@@ -587,7 +578,7 @@ Vue.use(DiagramPlugin);
 Vue.use(SymbolPalettePlugin);
 
 export default Vue.extend({
-  components: { KeyboardShortcuts, SuccessPopup, UploadPopup },
+  components: { KeyboardShortcuts, SuccessPopup },
   data: function () {
     return {
       openKeyboard: false,
@@ -610,7 +601,6 @@ export default Vue.extend({
       },
       allSelectedItems: [],
       showSuccessPopup: false,
-      showUploadPopup: false,
       selectionChange: (args) => {
         this.selectedObject = {
           item: "",
@@ -748,14 +738,11 @@ export default Vue.extend({
       SymbolPalette: [BpmnDiagrams, DataBinding],
     };
   },
-
-  mounted: function () {
-    this.height = window.innerHeight - 20;
-    this.paletteheight = window.innerHeight - 20 + "px";
-    diagram = this.$refs.diagramObject.ej2Instances;
-    diagram.fitToPage();
-  },
   methods: {
+    ...mapActions(["doGetSingleDiagram", "doUpdateDiagram"]),
+    async getDiagramInfo() {
+      await this.doGetSingleDiagram(this.$route.params.diagramId);
+    },
     undoAction() {
       let diagram;
       let diagramObj = document.getElementById("diagram");
@@ -805,7 +792,6 @@ export default Vue.extend({
         }
       }
       if (isSound) {
-        this.showUploadPopup = false;
         this.showSuccessPopup = true;
       }
     },
@@ -815,16 +801,50 @@ export default Vue.extend({
       diagram.exportDiagram(options);
       this.showSuccessPopup = false;
     },
-    uploadDiagram() {
-      this.showSuccessPopup = false;
-      this.theDiagram = diagram;
-      setTimeout(() => {
-        this.showUploadPopup = true;
-      }, 500);
+    async uploadDiagram() {
+      // Get Diagram Photo
+      let options = {};
+      options.mode = "Data";
+
+      options.margin = {
+        left: 10,
+        right: 10,
+        top: 10,
+        bottom: 10,
+      };
+
+      options.fileName = "format";
+      options.format = "ImageURL";
+
+      let base64data = diagram.exportDiagram(options);
+
+      const savedDiagram = diagram.saveDiagram();
+
+      const payload = {
+        diagramId: this.$route.params.diagramId,
+        diagram: JSON.parse(savedDiagram),
+        svg: base64data,
+      };
+      await this.doUpdateDiagram(payload);
+      location.reload();
     },
-    closeUploadPopup() {
-      this.showUploadPopup = false;
-    },
+  },
+  computed: {
+    ...mapState({
+      EditableDiagram: (state) => state.profileModule.editDiagram,
+    }),
+  },
+  async mounted() {
+    await this.getDiagramInfo();
+    this.height = window.innerHeight - 20;
+    this.paletteheight = window.innerHeight - 20 + "px";
+    diagram = this.$refs.diagramObject.ej2Instances;
+    diagram.fitToPage();
+    if (this.EditableDiagram.diagram) {
+      diagram.loadDiagram(JSON.stringify(this.EditableDiagram.diagram));
+    } else {
+      this.$router.go(-1);
+    }
   },
 });
 </script>

@@ -1348,12 +1348,12 @@ p:last-child {
 }
 
 .margin-top {
-  margin-top: 5rem;
+  margin-top: 5rem !important;
 }
 
 @media only screen and (max-width: 1023px) {
   .margin-top {
-    margin-top: 3rem;
+    margin-top: 3rem !important;
   }
 }
 
@@ -2074,7 +2074,9 @@ form .form-help {
 }
 
 .header-main nav {
-  display: inline-block;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 2rem;
   width: 100%;
 }

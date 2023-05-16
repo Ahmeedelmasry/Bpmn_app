@@ -35,11 +35,15 @@
           <v-btn
             text
             style="background: #1e7fcd"
-            @click="$emit('doUpload')"
+            @click="
+              popupType == 'upload' ? $emit('doUpload') : $emit('doUpdate')
+            "
             color="white"
           >
-            <v-icon>mdi-upload</v-icon>
-            Upload
+            <v-icon>{{
+              popupType == "upload" ? "mdi-upload" : "mdi-update"
+            }}</v-icon>
+            {{ popupType == "upload" ? "Upload" : "Update" }}
           </v-btn>
           <v-btn
             text
@@ -63,10 +67,9 @@ export default {
       toggle: false,
     };
   },
-  props: ["showSuccessPopup"],
+  props: ["showSuccessPopup", "popupType"],
   watch: {
     showSuccessPopup(newVal) {
-      console.log(newVal);
       this.toggle = newVal;
     },
   },

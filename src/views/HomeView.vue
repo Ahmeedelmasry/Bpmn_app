@@ -1,28 +1,6 @@
 <template>
   <div class="home">
-    <header class="header-main dark">
-      <nav>
-        <a href="" class="logo" rel="home"><span>BPMN</span></a>
-        <div class="nav-toggle"></div>
-        <ul class="inline">
-          <li><a href="" class="active">Home</a></li>
-          <li><a href="">Pricing</a></li>
-          <li><a href="">About</a></li>
-        </ul>
-        <ul class="inline right">
-          <li><a href="">Log In</a></li>
-          <li>
-            <a
-              href=""
-              class="button button-secondary button-m full-width-tablet"
-              role="button"
-              >Sign Up</a
-            >
-          </li>
-        </ul>
-      </nav>
-    </header>
-
+    <TheNav :darkMood="true" />
     <main>
       <section class="bg-image-hero center-tablet dark overlay-hero">
         <div
@@ -270,8 +248,9 @@
           </div>
         </div>
         <div class="center margin-top max-width-l">
-          <span class="muted">If you need any help, make sure to </span
-          ><a href="">book a demo</a><span class="muted">.</span>
+          <span class="muted">If you need any help, make sure to </span>
+          <router-link :to="{ name: 'signup' }">book a demo</router-link>
+          <span class="muted">.</span>
         </div>
       </section>
     </main>
@@ -320,8 +299,11 @@
               <p class="paragraph">Start your free 15-day trial today.</p>
             </div>
             <div class="col-one-third middle">
-              <a href="" class="button button-primary" role="button"
-                >Create An Account</a
+              <router-link
+                :to="{ name: 'signup' }"
+                class="button button-primary"
+                role="button"
+                >Create An Account</router-link
               >
             </div>
           </form>
@@ -378,11 +360,8 @@
 </template>
 
 <script>
+import TheNav from "@/components/TheNav";
 export default {
-  data() {
-    return {};
-  },
+  components: { TheNav },
 };
 </script>
-
-<style></style>

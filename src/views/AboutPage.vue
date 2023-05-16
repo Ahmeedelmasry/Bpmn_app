@@ -1,28 +1,6 @@
 <template>
   <div class="parent">
-    <header class="header-main">
-      <nav>
-        <a href="" class="logo" rel="home"><span>BPMN</span></a>
-        <div class="nav-toggle"></div>
-        <ul class="inline">
-          <li><a href="">Home</a></li>
-          <li><a href="">Pricing</a></li>
-          <li><a href="" class="active">About</a></li>
-        </ul>
-        <ul class="inline right">
-          <li><a href="">Log In</a></li>
-          <li>
-            <a
-              href=""
-              class="button button-secondary button-m full-width-tablet"
-              role="button"
-              >Sign Up</a
-            >
-          </li>
-        </ul>
-      </nav>
-    </header>
-
+    <TheNav :darkMood="false" />
     <main>
       <section class="bg-gradient-light center padding padding-top">
         <div class="max-width-m">
@@ -123,9 +101,13 @@
         <div class="center max-width-m">
           <h2>Want to join the team?</h2>
           <p class="paragraph">We’re hiring. Work from anywhere.</p>
-          <a href="#" class="button button-secondary space-top" role="button"
-            >Job Openings</a
+          <router-link
+            :to="{ name: 'about' }"
+            class="button button-secondary space-top"
+            role="button"
           >
+            Job Openings
+          </router-link>
         </div>
       </section>
 
@@ -238,3 +220,10 @@
     </footer>
   </div>
 </template>
+
+<script>
+import TheNav from "@/components/TheNav";
+export default {
+  components: { TheNav },
+};
+</script>

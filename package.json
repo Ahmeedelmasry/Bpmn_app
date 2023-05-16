@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@syncfusion/ej2-vue-diagrams": "^21.1.39",
+    "axios": "^1.4.0",
     "core-js": "^3.8.3",
     "install": "^0.13.0",
     "npm": "^9.6.5",

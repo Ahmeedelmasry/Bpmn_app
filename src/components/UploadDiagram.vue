@@ -60,6 +60,7 @@
 </template>
 
 <script>
+import Axios from "axios";
 export default {
   data() {
     return {
@@ -68,23 +69,52 @@ export default {
       diagramTitle: "",
       titleErr: "",
       loading: false,
+      title: "",
     };
   },
-
+  props: ["theDiagram"],
   methods: {
     onInput(val) {
       this.steps = parseInt(val);
     },
-    saveDiagram() {
+    async saveDiagram() {
       this.titleErr = "";
       if (!this.diagramTitle) {
         return (this.titleErr = "Please write your diagram title");
       }
       this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-        this.step = 2;
-      }, 1000);
+
+      // Get Diagram Photo
+      let options = {};
+      options.mode = "Data";
+
+      options.margin = {
+        left: 10,
+        right: 10,
+        top: 10,
+        bottom: 10,
+      };
+
+      options.fileName = "format";
+      options.format = "ImageURL";
+      let base64data = this.theDiagram.exportDiagram(options);
+
+      //Upload Diagram
+      const savedDiagram = JSON.parse(this.theDiagram.saveDiagram());
+      const payload = {
+        title: this.diagramTitle,
+        diagram: savedDiagram,
+        userId: localStorage.getItem("uid"),
+        svg: base64data,
+      };
+
+      await Axios.post(`${this.$store.state.apiLink}/diagrams/create`, payload)
+        .then(() => {
+          this.step = 2;
+        })
+        .catch((err) => console.log(err));
+
+      this.loading = false;
     },
   },
 };

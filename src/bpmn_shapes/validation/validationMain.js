@@ -17,7 +17,6 @@ export default function validateDiagram(diagram) {
       for (let k = 0; k < nodes.length; k++) {
         if (nodes[k].id != nodes[i].id) {
           let anotherShape = nodes[k];
-          console.log(anotherShape);
           if (
             anotherShape.shape.shape == "Event" ||
             anotherShape.shape.shape == "Gateway" ||
@@ -163,22 +162,6 @@ export default function validateDiagram(diagram) {
           ? ""
           : "Diagram must have only one end event shape";
         validateErrs.multiEnd.showErr = true;
-
-        let connectorErr = false;
-        for (let i = 0; i < diagram.connectors.length; i++) {
-          if (
-            !diagram.connectors[i].sourceID ||
-            !diagram.connectors[i].targetID
-          ) {
-            connectorErr = true;
-            break;
-          }
-        }
-        if (connectorErr) {
-          validateErrs.unConnectedArrow.msg =
-            "A connector must have a source shape and a target shape";
-          validateErrs.unConnectedArrow.showErr = true;
-        }
       }
       /*
        * ============================================
@@ -214,8 +197,15 @@ export default function validateDiagram(diagram) {
     let connectorErr = false;
     for (let i = 0; i < diagram.connectors.length; i++) {
       if (!diagram.connectors[i].sourceID || !diagram.connectors[i].targetID) {
-        connectorErr = true;
-        break;
+        if (
+          diagram.connectors[i].targetID &&
+          diagram.connectors[i].targetID.substring(0, 10) == "Empty Pool"
+        ) {
+          console.log("valid");
+        } else {
+          connectorErr = true;
+          break;
+        }
       }
     }
     if (connectorErr) {

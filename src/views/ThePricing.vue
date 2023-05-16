@@ -1,28 +1,6 @@
 <template>
   <div class="parent">
-    <header class="header-main">
-      <nav>
-        <a href="index.html" class="logo" rel="home"><span>BPMN</span></a>
-        <div class="nav-toggle"></div>
-        <ul class="inline">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="pricing.html" class="active">Pricing</a></li>
-          <li><a href="about.html">About</a></li>
-        </ul>
-        <ul class="inline right">
-          <li><a href="login.html">Log In</a></li>
-          <li>
-            <a
-              href="signup.html"
-              class="button button-secondary button-m full-width-tablet"
-              role="button"
-              >Sign Up</a
-            >
-          </li>
-        </ul>
-      </nav>
-    </header>
-
+    <TheNav :darkMood="false" />
     <main>
       <section class="bg-gradient-light padding padding-top">
         <div class="center max-width-l">
@@ -40,11 +18,11 @@
               <li>60 shapes per BPMN document</li>
               <li>100 templates</li>
             </ul>
-            <a
-              href="signup.html"
+            <router-link
+              :to="{ name: 'signup' }"
               class="button button-secondary full-width space-top"
               role="button"
-              >Sign Up For Free</a
+              >Sign Up For Free</router-link
             >
           </div>
           <div class="col-one-third card card-content">
@@ -63,11 +41,11 @@
               <li>Premium shape libraries</li>
               <li>Premium templates</li>
             </ul>
-            <a
-              href="signup.html"
+            <router-link
+              :to="{ name: 'signup' }"
               class="button button-secondary full-width space-top"
               role="button"
-              >Start 14-Day Trial</a
+              >Start 14-Day Trial</router-link
             >
           </div>
           <div class="col-one-third card card-content dark">
@@ -91,11 +69,11 @@
               <li>Advanced data and automation</li>
               <li>Salesforce integration</li>
             </ul>
-            <a
-              href="signup.html"
+            <router-link
+              :to="{ name: 'signup' }"
               class="button button-primary full-width space-top"
               role="button"
-              >Start 14-Day Trial</a
+              >Start 14-Day Trial</router-link
             >
           </div>
         </div>
@@ -105,11 +83,11 @@
         <div class="center max-width-m">
           <h2>Grow your startup the right way.</h2>
           <p class="paragraph">Don't waste another minute.</p>
-          <a
-            href="signup.html"
+          <router-link
+            :to="{ name: 'signup' }"
             class="button button-primary space-top"
             role="button"
-            >Sign Up For Free</a
+            >Sign Up For Free</router-link
           >
         </div>
       </section>
@@ -167,3 +145,10 @@
     </footer>
   </div>
 </template>
+
+<script>
+import TheNav from "@/components/TheNav";
+export default {
+  components: { TheNav },
+};
+</script>
