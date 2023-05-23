@@ -77,7 +77,10 @@
           >
         </div>
       </div>
-      <div class="col-one-half bg-image-06 featured-image"></div>
+      <div
+        class="col-one-half bg-image-06 featured-image"
+        :style="`height: ${imgHeight}px !important;`"
+      ></div>
     </section>
   </main>
 </template>
@@ -90,6 +93,7 @@ export default {
       email: "",
       toggle: false,
       loading: false,
+      imgHeight: "",
     };
   },
   computed: {
@@ -108,6 +112,13 @@ export default {
       }
     },
   },
+  mounted() {
+    if (window.matchMedia("(min-width: 767px)").matches) {
+      let windowHeight = window.innerHeight;
+      this.imgHeight = windowHeight;
+      console.log("match");
+    }
+  },
 };
 </script>
 
@@ -122,5 +133,15 @@ export default {
   color: indianred;
   font-size: 13px;
   font-weight: 700;
+}
+@media (max-width: 767px) {
+  .featured-image {
+    display: none;
+  }
+}
+@media (max-width: 500px) {
+  section {
+    margin: 0 !important;
+  }
 }
 </style>

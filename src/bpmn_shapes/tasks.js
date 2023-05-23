@@ -65,7 +65,7 @@ function getTaskShapes() {
     //   ports: ports,
     // },
     {
-      id: "Script Activity",
+      id: "Script Task",
       shape: {
         type: "Bpmn",
         shape: "Activity",

@@ -20,7 +20,7 @@ function getEventShapes() {
       ports: ports,
     },
     {
-      id: "Start Event With Message",
+      id: "Message Start Event ",
       shape: {
         type: "Bpmn",
         shape: "Event",
@@ -35,7 +35,7 @@ function getEventShapes() {
       ports: ports,
     },
     {
-      id: "Start Event With Error",
+      id: "Error Start Event",
       shape: {
         type: "Bpmn",
         shape: "Event",
@@ -50,7 +50,7 @@ function getEventShapes() {
       ports: ports,
     },
     {
-      id: "Start Event With Escalation",
+      id: "Escalation Start Event",
       shape: {
         type: "Bpmn",
         shape: "Event",
@@ -65,7 +65,7 @@ function getEventShapes() {
       ports: ports,
     },
     {
-      id: "Start Event With Timer",
+      id: "Timer Start Event",
       shape: {
         type: "Bpmn",
         shape: "Event",
@@ -94,7 +94,7 @@ function getEventShapes() {
       ports: ports,
     },
     {
-      id: "Intermediate Event With Message",
+      id: "Message Intermediate Event",
       shape: {
         type: "Bpmn",
         shape: "Event",
@@ -109,7 +109,7 @@ function getEventShapes() {
       ports: ports,
     },
     {
-      id: "Intermediate Event With Timer",
+      id: "Timer Intermediate Event",
       shape: {
         type: "Bpmn",
         shape: "Event",
@@ -124,7 +124,7 @@ function getEventShapes() {
       ports: ports,
     },
     {
-      id: "Intermediate Event With Escalation",
+      id: "Escalation Intermediate Event",
       shape: {
         type: "Bpmn",
         shape: "Event",
@@ -139,7 +139,7 @@ function getEventShapes() {
       ports: ports,
     },
     {
-      id: "Intermediate Event With Error",
+      id: "Error Intermediate Event",
       shape: {
         type: "Bpmn",
         shape: "Event",
@@ -169,7 +169,7 @@ function getEventShapes() {
       ports: ports,
     },
     {
-      id: "End Event With Message",
+      id: "Message End Event",
       shape: {
         type: "Bpmn",
         shape: "Event",
@@ -184,7 +184,7 @@ function getEventShapes() {
       ports: ports,
     },
     {
-      id: "End Event With Escalation",
+      id: "Escalation End Event",
       shape: {
         type: "Bpmn",
         shape: "Event",
@@ -199,7 +199,7 @@ function getEventShapes() {
       ports: ports,
     },
     {
-      id: "End Event With Error",
+      id: "Error End Event",
       shape: {
         type: "Bpmn",
         shape: "Event",

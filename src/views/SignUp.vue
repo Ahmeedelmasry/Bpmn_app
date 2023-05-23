@@ -54,7 +54,10 @@
           <router-link :to="{ name: 'login' }">Log In</router-link>
         </div>
       </div>
-      <div class="col-one-half bg-image-05 featured-image"></div>
+      <div
+        class="col-one-half bg-image-05 featured-image"
+        :style="`height: ${imgHeight}px!important;`"
+      ></div>
     </section>
   </main>
 </template>
@@ -70,6 +73,7 @@ export default {
         password: "",
       },
       disabled: false,
+      imgHeight: "",
     };
   },
   computed: {
@@ -89,6 +93,13 @@ export default {
       }
     },
   },
+  mounted() {
+    if (window.matchMedia("(min-width: 767px)").matches) {
+      let windowHeight = window.innerHeight;
+      this.imgHeight = windowHeight;
+      console.log("match");
+    }
+  },
 };
 </script>
 
@@ -99,6 +110,12 @@ main {
     color: indianred;
     font-size: 12px;
     font-weight: 700;
+  }
+}
+
+@media (max-width: 500px) {
+  section {
+    margin: 0 !important;
   }
 }
 </style>

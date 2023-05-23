@@ -33,7 +33,7 @@ function getGatewayShapes() {
       height: 60,
     },
     {
-      id: "Parallel Event Based Gateway",
+      id: "Event Based Gateway",
       shape: {
         type: "Bpmn",
         shape: "Gateway",

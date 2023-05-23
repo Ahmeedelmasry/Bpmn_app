@@ -1,5 +1,8 @@
 <template>
-  <div class="profile">
+  <div
+    class="profile"
+    :style="`height: ${windowHeight ? windowHeight + 'px' : 'unset'}`"
+  >
     <div class="upper">
       <div class="pic">
         <img
@@ -8,14 +11,16 @@
         />
       </div>
     </div>
-    <div class="lower">
-      <div class="username">
-        <h3>{{ userData.userName }}</h3>
+    <v-container class="lower_container">
+      <div class="lower">
+        <div class="username">
+          <h3>{{ userData.userName }}</h3>
+        </div>
+        <div class="email">
+          <h3>{{ userData.email }}</h3>
+        </div>
       </div>
-      <div class="email">
-        <h3>{{ userData.email }}</h3>
-      </div>
-    </div>
+    </v-container>
     <v-btn
       style="
         margin-top: -50px;
@@ -37,12 +42,16 @@ export default {
   data() {
     return {
       defaultImg: require("@/assets/user.png"),
+      windowHeight: "",
     };
   },
   computed: {
     ...mapState({
       userData: (state) => state.authModule.userData,
     }),
+  },
+  mounted() {
+    this.windowHeight = window.innerHeight;
   },
 };
 </script>
@@ -75,6 +84,21 @@ export default {
   .lower {
     width: 100%;
     text-align: center;
+  }
+}
+
+// Media
+@media (max-width: 980px) {
+  .lower_container {
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+}
+
+@media (max-width: 600px) {
+  .username h3,
+  .email h3 {
+    font-size: 20px !important;
   }
 }
 </style>

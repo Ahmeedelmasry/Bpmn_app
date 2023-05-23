@@ -34,7 +34,7 @@
                   text-align: center !important;
                 "
                 dark
-                >Diagram Uploaded Successfulley!</v-toolbar
+                >Diagram Uploaded Successfully!</v-toolbar
               >
               <v-card-text class="pb-0">
                 <div class="text-h5 pa-6 text-center">

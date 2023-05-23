@@ -103,8 +103,8 @@
                   justify-content: center;
                 "
               >
-                <v-col cols="2"></v-col>
-                <v-col cols="4 pb-0">
+                <v-col cols="2 d-none d-md-block"></v-col>
+                <v-col cols="6" md="4" style="margin-top: 0 !important">
                   <v-card
                     class="text-start"
                     style="box-shadow: unset !important"
@@ -119,13 +119,14 @@
                     >
                       <p>Item Type: {{ selectedObject.item.shape.shape }}</p>
                       <p>
-                        Item Name: {{ selectedObject.item.shape.event.event }}
-                        {{ selectedObject.item.shape.shape }}
+                        Item Name:
                         {{
                           selectedObject.item.shape.event.trigger !== "None"
-                            ? "With " + selectedObject.item.shape.event.trigger
+                            ? selectedObject.item.shape.event.trigger
                             : ""
                         }}
+                        {{ selectedObject.item.shape.event.event }}
+                        {{ selectedObject.item.shape.shape }}
                       </p>
                     </div>
                     <!-- Gateways -->
@@ -152,14 +153,14 @@
                     >
                       <p>Item Type: Activity</p>
                       <p>
-                        Item Name: Activity
+                        Item Name:
                         {{
                           selectedObject.item.shape.activity.task.type !==
                           "None"
-                            ? "With " +
-                              selectedObject.item.shape.activity.task.type
+                            ? selectedObject.item.shape.activity.task.type
                             : ""
                         }}
+                        Task
                       </p>
                     </div>
                     <!-- Data -->
@@ -181,7 +182,7 @@
                     <!-- End Of Selected Item -->
                   </v-card>
                 </v-col>
-                <v-col cols="3" class="text-start">
+                <v-col cols="6" md="3" class="text-start">
                   <v-card
                     class="pb-5 pl-7"
                     style="box-shadow: unset !important"
@@ -219,14 +220,13 @@
                                 >
                                   <p>
                                     {{ i + 1 }}- Item Name:
-                                    {{ predecessor.shape.event.event }}
-                                    {{ predecessor.shape.shape }}
                                     {{
                                       predecessor.shape.event.trigger !== "None"
-                                        ? "With " +
-                                          predecessor.shape.event.trigger
+                                        ? predecessor.shape.event.trigger
                                         : ""
                                     }}
+                                    {{ predecessor.shape.event.event }}
+                                    {{ predecessor.shape.shape }}
                                   </p>
                                 </div>
                                 <!-- Gateways -->
@@ -252,14 +252,14 @@
                                   "
                                 >
                                   <p>
-                                    {{ i + 1 }}- Item Name: Activity
+                                    {{ i + 1 }}- Item Name:
                                     {{
                                       predecessor.shape.activity.task.type !==
                                       "None"
-                                        ? "With " +
-                                          predecessor.shape.activity.task.type
+                                        ? predecessor.shape.activity.task.type
                                         : ""
                                     }}
+                                    Task
                                   </p>
                                 </div>
                                 <!-- Data -->
@@ -316,14 +316,13 @@
                                 >
                                   <p>
                                     {{ i + 1 }}- Item Name:
-                                    {{ successor.shape.event.event }}
-                                    {{ successor.shape.shape }}
                                     {{
                                       successor.shape.event.trigger !== "None"
-                                        ? "With " +
-                                          successor.shape.event.trigger
+                                        ? successor.shape.event.trigger
                                         : ""
                                     }}
+                                    {{ successor.shape.event.event }}
+                                    {{ successor.shape.shape }}
                                   </p>
                                 </div>
                                 <!-- Gateways -->
@@ -349,14 +348,14 @@
                                   "
                                 >
                                   <p>
-                                    {{ i + 1 }}- Item Name: Activity
+                                    {{ i + 1 }}- Item Name:
                                     {{
                                       successor.shape.activity.task.type !==
                                       "None"
-                                        ? "With " +
-                                          successor.shape.activity.task.type
+                                        ? successor.shape.activity.task.type
                                         : ""
                                     }}
+                                    Task
                                   </p>
                                 </div>
                                 <!-- Data -->
@@ -384,7 +383,7 @@
                     </v-row>
                   </v-card>
                 </v-col>
-                <v-col cols="2"></v-col>
+                <v-col cols="2 d-none d-md-block"></v-col>
               </v-row>
             </v-container>
           </div>
@@ -448,6 +447,34 @@
           </template>
           <span>Keyboard Shortcuts</span>
         </v-tooltip>
+
+        <div style="margin-top: 20px">
+          <v-tooltip left>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon
+                @click="$router.push({ name: 'myDiagrams' })"
+                v-bind="attrs"
+                v-on="on"
+                >mdi-shape</v-icon
+              >
+            </template>
+            <span>My Saved Diagrams</span>
+          </v-tooltip>
+        </div>
+
+        <div style="margin-top: 20px">
+          <v-tooltip left>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon
+                @click="$router.push({ name: 'home' })"
+                v-bind="attrs"
+                v-on="on"
+                >mdi-home-city</v-icon
+              >
+            </template>
+            <span>Home Page</span>
+          </v-tooltip>
+        </div>
       </div>
 
       <!-- Bottom Btns Parent -->
@@ -523,11 +550,11 @@
         </v-tooltip>
         <v-tooltip left>
           <template v-slot:activator="{ on, attrs }">
-            <v-icon @click="validate" v-bind="attrs" v-on="on"
+            <v-icon color="green" @click="validate" v-bind="attrs" v-on="on"
               >mdi-check</v-icon
             >
           </template>
-          <span>Completed</span>
+          <span>Validate</span>
         </v-tooltip>
       </div>
     </div>
@@ -622,6 +649,7 @@ export default Vue.extend({
         } else {
           this.allSelectedItems = [];
         }
+
         let selectedObj = {};
         let isSelectedItem = selectItem(args, diagram, selectedObj);
         if (isSelectedItem) {

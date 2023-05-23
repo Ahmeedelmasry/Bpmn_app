@@ -119,13 +119,14 @@
                     >
                       <p>Item Type: {{ selectedObject.item.shape.shape }}</p>
                       <p>
-                        Item Name: {{ selectedObject.item.shape.event.event }}
-                        {{ selectedObject.item.shape.shape }}
+                        Item Name:
                         {{
                           selectedObject.item.shape.event.trigger !== "None"
-                            ? "With " + selectedObject.item.shape.event.trigger
+                            ? selectedObject.item.shape.event.trigger
                             : ""
                         }}
+                        {{ selectedObject.item.shape.event.event }}
+                        {{ selectedObject.item.shape.shape }}
                       </p>
                     </div>
                     <!-- Gateways -->
@@ -152,14 +153,14 @@
                     >
                       <p>Item Type: Activity</p>
                       <p>
-                        Item Name: Activity
+                        Item Name:
                         {{
                           selectedObject.item.shape.activity.task.type !==
                           "None"
-                            ? "With " +
-                              selectedObject.item.shape.activity.task.type
+                            ? selectedObject.item.shape.activity.task.type
                             : ""
                         }}
+                        Task
                       </p>
                     </div>
                     <!-- Data -->
@@ -218,15 +219,13 @@
                                   "
                                 >
                                   <p>
-                                    {{ i + 1 }}- Item Name:
-                                    {{ predecessor.shape.event.event }}
-                                    {{ predecessor.shape.shape }}
-                                    {{
+                                    {{ i + 1 }}- Item Name:{{
                                       predecessor.shape.event.trigger !== "None"
-                                        ? "With " +
-                                          predecessor.shape.event.trigger
+                                        ? predecessor.shape.event.trigger
                                         : ""
                                     }}
+                                    {{ predecessor.shape.event.event }}
+                                    {{ predecessor.shape.shape }}
                                   </p>
                                 </div>
                                 <!-- Gateways -->
@@ -252,14 +251,14 @@
                                   "
                                 >
                                   <p>
-                                    {{ i + 1 }}- Item Name: Activity
+                                    {{ i + 1 }}- Item Name:
                                     {{
                                       predecessor.shape.activity.task.type !==
                                       "None"
-                                        ? "With " +
-                                          predecessor.shape.activity.task.type
+                                        ? predecessor.shape.activity.task.type
                                         : ""
                                     }}
+                                    Task
                                   </p>
                                 </div>
                                 <!-- Data -->
@@ -316,14 +315,13 @@
                                 >
                                   <p>
                                     {{ i + 1 }}- Item Name:
-                                    {{ successor.shape.event.event }}
-                                    {{ successor.shape.shape }}
                                     {{
                                       successor.shape.event.trigger !== "None"
-                                        ? "With " +
-                                          successor.shape.event.trigger
+                                        ? successor.shape.event.trigger
                                         : ""
                                     }}
+                                    {{ successor.shape.event.event }}
+                                    {{ successor.shape.shape }}
                                   </p>
                                 </div>
                                 <!-- Gateways -->
@@ -349,14 +347,14 @@
                                   "
                                 >
                                   <p>
-                                    {{ i + 1 }}- Item Name: Activity
+                                    {{ i + 1 }}- Item Name:
                                     {{
                                       successor.shape.activity.task.type !==
                                       "None"
-                                        ? "With " +
-                                          successor.shape.activity.task.type
+                                        ? successor.shape.activity.task.type
                                         : ""
                                     }}
+                                    Task
                                   </p>
                                 </div>
                                 <!-- Data -->
@@ -440,6 +438,34 @@
           </template>
           <span>Keyboard Shortcuts</span>
         </v-tooltip>
+
+        <div style="margin-top: 20px">
+          <v-tooltip left>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon
+                @click="$router.push({ name: 'myDiagrams' })"
+                v-bind="attrs"
+                v-on="on"
+                >mdi-shape</v-icon
+              >
+            </template>
+            <span>My Saved Diagrams</span>
+          </v-tooltip>
+        </div>
+
+        <div style="margin-top: 20px">
+          <v-tooltip left>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon
+                @click="$router.push({ name: 'home' })"
+                v-bind="attrs"
+                v-on="on"
+                >mdi-home-city</v-icon
+              >
+            </template>
+            <span>Home Page</span>
+          </v-tooltip>
+        </div>
       </div>
 
       <!-- Bottom Btns Parent -->
@@ -515,11 +541,11 @@
         </v-tooltip>
         <v-tooltip left>
           <template v-slot:activator="{ on, attrs }">
-            <v-icon @click="validate" v-bind="attrs" v-on="on"
+            <v-icon color="green" @click="validate" v-bind="attrs" v-on="on"
               >mdi-check</v-icon
             >
           </template>
-          <span>Completed</span>
+          <span>Validate</span>
         </v-tooltip>
       </div>
     </div>

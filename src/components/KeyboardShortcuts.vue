@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="openKeyboard" width="300px">
-    <v-card class="pb-5 px-4">
+    <v-card style="padding: 15px 10px !important">
       <v-container>
         <h5 class="mb-7">Keyboard Shortcuts</h5>
         <v-row>

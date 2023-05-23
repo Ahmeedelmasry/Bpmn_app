@@ -66,7 +66,7 @@ const routes = [
         name: "profile",
         component: () => import("../views/user_dashboard/ProfilePage"),
         meta: {
-          title: "Profile",
+          title: "User | Profile",
         },
       },
       {
@@ -74,7 +74,7 @@ const routes = [
         name: "EditProfile",
         component: () => import("../views/user_dashboard/EditProfile"),
         meta: {
-          title: "Edit Profile",
+          title: "User | Edit Profile",
         },
       },
       {
@@ -82,7 +82,7 @@ const routes = [
         name: "myDiagrams",
         component: () => import("../views/user_dashboard/MyDiagrams"),
         meta: {
-          title: "My Diagrams",
+          title: "User | Saved Diagrams",
         },
       },
     ],
@@ -91,6 +91,14 @@ const routes = [
     path: "/create-diagram",
     name: "create_bpmn",
     component: () => import("../views/CreateBpmn.vue"),
+    meta: {
+      title: "Create New Diagram",
+    },
+  },
+  {
+    path: "/documentation",
+    name: "docs",
+    component: () => import("../views/TheDocs.vue"),
     meta: {
       title: "Create New Diagram",
     },

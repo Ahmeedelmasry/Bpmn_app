@@ -3,7 +3,7 @@ import { ConnectorConstraints } from "@syncfusion/ej2-vue-diagrams";
 function getConnectors() {
   let connectorSymbols = [
     {
-      id: "Orthogonal Flow",
+      id: "sequence Flow",
       type: "Orthogonal",
       sourcePoint: { x: 0, y: 0 },
       targetPoint: { x: 40, y: 40 },
@@ -17,7 +17,7 @@ function getConnectors() {
       cornerRadius: 10,
     },
     {
-      id: "Orthogonal Dotted Flow",
+      id: "message Flow",
       type: "Orthogonal",
       sourcePoint: { x: 0, y: 0 },
       targetPoint: { x: 40, y: 40 },
@@ -31,7 +31,7 @@ function getConnectors() {
       cornerRadius: 10,
     },
     {
-      id: "Straight Flow",
+      id: "Straight sequence Flow",
       type: "Straight",
       sourcePoint: { x: 0, y: 0 },
       targetPoint: { x: 40, y: 40 },
@@ -44,7 +44,7 @@ function getConnectors() {
         ConnectorConstraints.Default | ConnectorConstraints.DragSegmentThumb,
     },
     {
-      id: "Straight Dotted Flow",
+      id: "Straight message Flow",
       type: "Straight",
       sourcePoint: { x: 0, y: 0 },
       targetPoint: { x: 40, y: 40 },
