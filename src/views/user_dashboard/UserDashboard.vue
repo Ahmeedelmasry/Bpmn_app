@@ -8,7 +8,11 @@
             permanent
             left
             expand-on-hover
-            style="background: white !important; z-index: 10"
+            style="
+              background: white !important;
+              z-index: 10;
+              border-radius: 0 !important;
+            "
           >
             <template v-slot:prepend>
               <v-list-item two-line style="padding-left: 7px">
@@ -46,15 +50,6 @@
 
                 <v-list-item-content>
                   <v-list-item-title>Profile</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item :to="{ name: 'EditProfile' }">
-                <v-list-item-icon style="margin-right: 10px">
-                  <v-icon>mdi-account-edit</v-icon>
-                </v-list-item-icon>
-
-                <v-list-item-content>
-                  <v-list-item-title>Edit Profile</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item :to="{ name: 'myDiagrams' }">

@@ -2,7 +2,7 @@
   <div
     class="my_diagrams"
     :style="`padding-top: 20px; height: ${
-      windowHeight ? windowHeight + 'px' : 'unset'
+      windowHeight ? windowHeight + 'px' : '100vh'
     }`"
   >
     <h3 style="text-align: center">My Diagrams</h3>
@@ -374,6 +374,12 @@ export default {
 
 <style lang="scss">
 .my_diagrams {
+  background-image: url(../../assets/photo_6016823636792556918_y.jpg);
+  background-size: cover;
+  background-position: left top;
+  h3 {
+    color: rgba(255, 255, 255, 0.726);
+  }
   .diagrams-parent {
     .overlay {
       position: absolute;
@@ -387,6 +393,10 @@ export default {
       z-index: 1;
     }
   }
+}
+.v-card {
+  box-shadow: 0px 0px 17px -4px black !important;
+  border-radius: 10px !important;
 }
 .card_tit {
   bottom: 0;

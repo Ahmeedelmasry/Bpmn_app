@@ -14,6 +14,7 @@
             text-align: center !important;
             display: flex;
             font-size: 30px;
+            background-color: #023769 !important;
           "
           dark
           >{{ selectedDiagram.title }}</v-toolbar

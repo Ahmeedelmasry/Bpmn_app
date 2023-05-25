@@ -64,17 +64,9 @@ const routes = [
       {
         path: "profile",
         name: "profile",
-        component: () => import("../views/user_dashboard/ProfilePage"),
-        meta: {
-          title: "User | Profile",
-        },
-      },
-      {
-        path: "edit-profile",
-        name: "EditProfile",
         component: () => import("../views/user_dashboard/EditProfile"),
         meta: {
-          title: "User | Edit Profile",
+          title: "User | Profile",
         },
       },
       {

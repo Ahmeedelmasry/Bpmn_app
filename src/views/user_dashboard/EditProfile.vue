@@ -1,38 +1,37 @@
 <template>
-  <div class="profile" data-app="true" :style="`min-height: ${windowHeight}px`">
-    <div class="upper">
-      <div class="pic">
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <div class="img-div" v-bind="attrs" v-on="on">
-              <img
-                :src="
-                  imgUrl
-                    ? imgUrl
-                    : userData.profileImg
-                    ? userData.profileImg
-                    : defaultImg
-                "
-                alt="profile picture"
-              />
-              <input
-                type="file"
-                @change="changePic"
-                accept="image/jpg, image/jpeg, image/png"
-              />
-              <div class="img_overlay"></div>
-            </div>
-          </template>
-          <span>Change Profile Picture</span>
-        </v-tooltip>
-      </div>
-    </div>
+  <div
+    class="edit-profile"
+    data-app="true"
+    :style="`min-height: ${windowHeight}px`"
+  >
     <v-container class="lower_container">
       <div class="lower" style="margin-top: 20px">
-        <v-form
-          style="padding-left: 20px; padding-right: 20px"
-          @submit.prevent="submitEdit"
-        >
+        <div class="pic">
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <div class="img-div" v-bind="attrs" v-on="on">
+                <img
+                  :src="
+                    imgUrl
+                      ? imgUrl
+                      : userData.profileImg
+                      ? userData.profileImg
+                      : defaultImg
+                  "
+                  alt="profile picture"
+                />
+                <input
+                  type="file"
+                  @change="changePic"
+                  accept="image/jpg, image/jpeg, image/png"
+                />
+                <div class="img_overlay"></div>
+              </div>
+            </template>
+            <span>Change Profile Picture</span>
+          </v-tooltip>
+        </div>
+        <v-form style="padding-left: 20px; padding-right: 20px" @submit.prevent>
           <v-row style="margin: 0">
             <v-col cols="12" sm="6" style="margin: 0">
               <v-text-field
@@ -40,6 +39,7 @@
                 outlined
                 v-model="userData.userName"
                 :error-messages="updateErrs.userName"
+                :disabled="!startEdit"
               ></v-text-field>
             </v-col>
             <v-col cols="12" sm="6" style="margin: 0">
@@ -85,10 +85,43 @@
                 :error-messages="updateErrs.confirmPass"
               ></v-text-field>
             </v-col>
+            <v-col
+              cols="12"
+              style="padding: 0; margin-bottom: 10px"
+              v-if="startEdit && changePass"
+            >
+              <v-icon
+                style="
+                  color: white;
+                  cursor: pointer;
+                  border-radius: 50%;
+                  border: 1px solid #ffffffba;
+                  background-color: rgb(60, 83, 168);
+                "
+                @click="changePass = false"
+                >mdi-chevron-up</v-icon
+              >
+            </v-col>
             <v-col cols="12">
               <input type="submit" value="" style="display: none" />
+
               <v-btn
-                type="submit"
+                type="button"
+                v-if="!startEdit"
+                @click="startEdit = true"
+                style="
+                  background-color: rgb(0, 157, 255) !important;
+                  font-weight: 700;
+                  color: white !important;
+                  padding: 7px 25px;
+                  border-radius: 10px;
+                  margin-left: 10px;
+                "
+                >Edit</v-btn
+              >
+              <v-btn
+                type="button"
+                @click="submitEdit"
                 style="
                   background-color: rgb(60 83 168) !important;
                   font-weight: 700;
@@ -97,21 +130,36 @@
                   border-radius: 10px;
                 "
                 :loading="loading"
+                v-if="startEdit"
                 >Submit</v-btn
               >
               <v-btn
                 type="button"
-                :style="`background-color: ${
-                  changePass ? 'indianred' : 'rgb(0, 157, 255) !important'
-                };
+                v-if="startEdit"
+                style="
+                  background-color: indianred !important;
                   font-weight: 700;
                   color: white !important;
                   padding: 7px 25px;
                   border-radius: 10px;
-                  margin-left: 10px;`"
-                @click="changePass = !changePass"
-                >{{ changePass ? "Cancel" : "Edit Pass" }}</v-btn
+                  margin-left: 10px;
+                "
+                class="cancel_btn"
+                @click="cancelEdit"
+                >Cancel</v-btn
               >
+              <p
+                v-if="startEdit && !changePass"
+                style="
+                  color: rgba(255, 255, 255, 0.726);
+                  display: block;
+                  margin-top: 10px;
+                  cursor: pointer;
+                "
+                @click="changePass = !changePass"
+              >
+                Change Password?
+              </p>
             </v-col>
           </v-row>
         </v-form>
@@ -135,6 +183,7 @@ export default {
       windowHeight: "",
       changePass: false,
       confirmPass: "",
+      startEdit: false,
     };
   },
   computed: {
@@ -178,6 +227,10 @@ export default {
         location.reload();
       }
     },
+    cancelEdit() {
+      this.changePass = false;
+      this.startEdit = false;
+    },
   },
   mounted() {
     this.windowHeight = window.innerHeight;
@@ -190,25 +243,34 @@ export default {
 </script>
 
 <style lang="scss">
-.profile {
+.edit-profile {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
   gap: 80px;
-  .upper {
-    width: 100%;
-    background-image: repeating-linear-gradient(45deg, #2782d0, #5bb1fa 100px);
-    position: relative;
-    height: 200px;
+  background-image: url(../../assets/photo_6016823636792556918_y.jpg);
+  background-size: cover;
+  background-position: center center;
+  .lower {
+    width: 50%;
+    text-align: center;
+    margin-right: auto;
+    margin-left: auto;
+    background-color: white;
+    padding: 15px 0;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 0px 17px -4px black;
+    background-image: url(../../assets/photo_6016823636792556918_y.jpg);
+    background-size: cover;
+    background-position: left top;
     .pic {
-      position: absolute;
-      left: 50%;
-      bottom: -75px;
-      transform: translateX(-50%);
       border-radius: 50%;
       width: 150px;
       height: 150px;
+      margin: 0 auto 20px;
       overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.693);
       .img-div {
         position: relative;
         img {
@@ -240,9 +302,16 @@ export default {
       }
     }
   }
-  .lower {
-    width: 100%;
-    text-align: center;
+  .v-text-field {
+    fieldset {
+      border-color: rgba(255, 255, 255, 0.726);
+    }
+    input {
+      color: white;
+    }
+    label {
+      color: rgba(255, 255, 255, 0.726);
+    }
   }
   input {
     border: none !important;
@@ -257,6 +326,24 @@ export default {
   .lower_container {
     padding-left: 50px;
     padding-right: 50px;
+  }
+  .edit-profile {
+    .lower {
+      width: 70%;
+    }
+  }
+}
+@media (max-width: 600px) {
+  .edit-profile {
+    .lower {
+      width: 90%;
+    }
+  }
+}
+@media (max-width: 460px) {
+  .cancel_btn {
+    margin-left: 0 !important;
+    margin-top: 10px !important;
   }
 }
 </style>

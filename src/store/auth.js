@@ -58,10 +58,11 @@ export default {
     },
     async doForgetPassword(ctx, email) {
       ctx.commit("catchForgetPassErrs", "");
-      await Axios.get(`${ctx.rootState.apiLink}/auth/forgetPassword/${email}`)
-        .catch((err) => {
-          ctx.commit("catchForgetPassErrs", err.response.data);
-        });
+      await Axios.get(
+        `${ctx.rootState.apiLink}/auth/forgetPassword/${email}`
+      ).catch((err) => {
+        ctx.commit("catchForgetPassErrs", err.response.data);
+      });
     },
   },
 };
